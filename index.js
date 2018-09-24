@@ -1,25 +1,27 @@
-const express = require('express');
-const { ApolloServer, gql } = require('apollo-server-express');
+import express from 'express';
+import bodyParser from 'body-parser';
+import { graphiqlExpress, graphqlExpress } from 'apollo-server-express';
+import { makeExecutableSchema } from 'graphql-tools';
+import mongoose from 'mongoose';
 
-// Construct a schema, using GraphQL schema language
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
+import typeDefs from './schema';
+import resolvers from './resolvers';
 
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-};
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+});
 
-const server = new ApolloServer({ typeDefs, resolvers });
+mongoose.connect('mongodb://localhost/test');
+
+const Cat = mongoose.model('Cat', { name: String });
+
+const PORT = 3000;
 
 const app = express();
-server.applyMiddleware({ app });
 
-app.listen({ port: 4000 }, () =>
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`),
-);
+app.use('/graphql', bodyParser.json(), graphqlExpress({ schema, context: { Cat } }));
+
+app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
+
+app.listen(PORT);
