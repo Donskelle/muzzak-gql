@@ -1,0 +1,19 @@
+{
+  "name": "testgraphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^2.1.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "graphql": "^14.0.2",
+    "graphql-tools": "^4.0.0"
+  }
+}
