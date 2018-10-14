@@ -1,5 +1,9 @@
 # Muzzakshare
 Using Graphql and Create React App
+
+### Required
+Node 9.10.0
+
 ### Frontend
 [Create React App](https://github.com/facebook/create-react-app)
 
