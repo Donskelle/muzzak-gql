@@ -1,16 +1,15 @@
 {
-  "name": "testgraphql",
+  "name": "muzzak",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "echo nothing to start",
-    "update:db": "prima deploy"
+    "deploy": "prima deploy",
+    "reset": "prima reset"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {},
-  "dependencies": {
-    "prisma": "^1.18.0"
-  }
+  "dependencies": {}
 }
