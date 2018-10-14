@@ -1,5 +1,9 @@
 # muzzak-backend-gql
 Backend using prisma as datebase and graphql generator.
+You need to install it before
+```
+npm i -g prisma
+```
 
 ### backend links
 [playground](https://eu1.prisma.sh/fabian-f24b98/muzzakshare/dev)
