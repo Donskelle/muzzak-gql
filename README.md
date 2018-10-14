@@ -1,4 +1,5 @@
-# Muzzakshare using Graphql and Create React App
+# Muzzakshare
+Using Graphql and Create React App
 ### Frontend
 
 
