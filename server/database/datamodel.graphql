@@ -15,3 +15,16 @@ type User {
   name: String!
   posts: [Post!]!
 }
+
+type Playlist {
+  author: User!
+  title: String!
+  songs: [Song!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Song {
+  url: String!
+  addedBy: User!
+}

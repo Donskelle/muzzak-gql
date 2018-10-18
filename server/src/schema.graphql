@@ -4,7 +4,11 @@ type Query {
   feed: [Post!]!
   drafts: [Post!]!
   post(id: ID!): Post
+  posts(filter: String, skip: Int, first: Int, orderBy: PostOrderByInput): [Post!]!
   me: User
+  users(filter: String, skip: Int, first: Int, orderBy: UserOrderByInput, last: Int): [User!]!
+  playlists(filter: String, skip: Int, first: Int, orderBy: PlaylistOrderByInput): [Playlist!]!
+  playlist: Playlist
 }
 
 type Mutation {
@@ -28,5 +32,5 @@ type User {
   id: ID!
   email: String!
   name: String!
-  posts: [Post!]!
+  posts(filter: String, skip: Int, first: Int, orderBy: PostOrderByInput): [Post!]!
 }

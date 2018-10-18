@@ -1,7 +1,15 @@
 # source: https://eu1.prisma.sh/public-laceslayer-665/muzzak/dev
-# timestamp: Sun Oct 14 2018 23:35:31 GMT+0200 (Mitteleuropäische Sommerzeit)
+# timestamp: Thu Oct 18 2018 10:43:49 GMT+0200 (Mitteleuropäische Sommerzeit)
+
+type AggregatePlaylist {
+  count: Int!
+}
 
 type AggregatePost {
+  count: Int!
+}
+
+type AggregateSong {
   count: Int!
 }
 
@@ -24,6 +32,8 @@ scalar Long
 
 type Mutation {
   createPost(data: PostCreateInput!): Post!
+  createPlaylist(data: PlaylistCreateInput!): Playlist!
+  createSong(data: SongCreateInput!): Song!
   createUser(data: UserCreateInput!): User!
   updatePost(data: PostUpdateInput!, where: PostWhereUniqueInput!): Post
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
@@ -32,8 +42,12 @@ type Mutation {
   upsertPost(where: PostWhereUniqueInput!, create: PostCreateInput!, update: PostUpdateInput!): Post!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyPosts(data: PostUpdateInput!, where: PostWhereInput): BatchPayload!
+  updateManyPlaylists(data: PlaylistUpdateInput!, where: PlaylistWhereInput): BatchPayload!
+  updateManySongs(data: SongUpdateInput!, where: SongWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   deleteManyPosts(where: PostWhereInput): BatchPayload!
+  deleteManyPlaylists(where: PlaylistWhereInput): BatchPayload!
+  deleteManySongs(where: SongWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
@@ -62,6 +76,200 @@ type PageInfo {
 
   """When paginating forwards, the cursor to continue."""
   endCursor: String
+}
+
+type Playlist {
+  author: User!
+  title: String!
+  songs(where: SongWhereInput, orderBy: SongOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Song!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A connection to a list of items."""
+type PlaylistConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [PlaylistEdge]!
+  aggregate: AggregatePlaylist!
+}
+
+input PlaylistCreateInput {
+  title: String!
+  author: UserCreateOneInput!
+  songs: SongCreateManyInput
+}
+
+"""An edge in a connection."""
+type PlaylistEdge {
+  """The item at the end of the edge."""
+  node: Playlist!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum PlaylistOrderByInput {
+  title_ASC
+  title_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  id_ASC
+  id_DESC
+}
+
+type PlaylistPreviousValues {
+  title: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PlaylistSubscriptionPayload {
+  mutation: MutationType!
+  node: Playlist
+  updatedFields: [String!]
+  previousValues: PlaylistPreviousValues
+}
+
+input PlaylistSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [PlaylistSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PlaylistSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PlaylistSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: PlaylistWhereInput
+}
+
+input PlaylistUpdateInput {
+  title: String
+  author: UserUpdateOneRequiredInput
+  songs: SongUpdateManyInput
+}
+
+input PlaylistWhereInput {
+  """Logical AND on all given filters."""
+  AND: [PlaylistWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PlaylistWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PlaylistWhereInput!]
+  title: String
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values that are contained in given list."""
+  title_in: [String!]
+
+  """All values that are not contained in given list."""
+  title_not_in: [String!]
+
+  """All values less than the given value."""
+  title_lt: String
+
+  """All values less than or equal the given value."""
+  title_lte: String
+
+  """All values greater than the given value."""
+  title_gt: String
+
+  """All values greater than or equal the given value."""
+  title_gte: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values not ending with the given string."""
+  title_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  author: UserWhereInput
+  songs_every: SongWhereInput
+  songs_some: SongWhereInput
+  songs_none: SongWhereInput
 }
 
 type Post implements Node {
@@ -393,10 +601,14 @@ input PostWhereUniqueInput {
 
 type Query {
   posts(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Post]!
+  playlists(where: PlaylistWhereInput, orderBy: PlaylistOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Playlist]!
+  songs(where: SongWhereInput, orderBy: SongOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Song]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   post(where: PostWhereUniqueInput!): Post
   user(where: UserWhereUniqueInput!): User
   postsConnection(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PostConnection!
+  playlistsConnection(where: PlaylistWhereInput, orderBy: PlaylistOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PlaylistConnection!
+  songsConnection(where: SongWhereInput, orderBy: SongOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): SongConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
 
   """Fetches an object given its ID"""
@@ -406,8 +618,158 @@ type Query {
   ): Node
 }
 
+type Song {
+  url: String!
+  addedBy: User!
+}
+
+"""A connection to a list of items."""
+type SongConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [SongEdge]!
+  aggregate: AggregateSong!
+}
+
+input SongCreateInput {
+  url: String!
+  addedBy: UserCreateOneInput!
+}
+
+input SongCreateManyInput {
+  create: [SongCreateInput!]
+}
+
+"""An edge in a connection."""
+type SongEdge {
+  """The item at the end of the edge."""
+  node: Song!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum SongOrderByInput {
+  url_ASC
+  url_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type SongPreviousValues {
+  url: String!
+}
+
+type SongSubscriptionPayload {
+  mutation: MutationType!
+  node: Song
+  updatedFields: [String!]
+  previousValues: SongPreviousValues
+}
+
+input SongSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [SongSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [SongSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [SongSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: SongWhereInput
+}
+
+input SongUpdateInput {
+  url: String
+  addedBy: UserUpdateOneRequiredInput
+}
+
+input SongUpdateManyInput {
+  create: [SongCreateInput!]
+}
+
+input SongWhereInput {
+  """Logical AND on all given filters."""
+  AND: [SongWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [SongWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [SongWhereInput!]
+  url: String
+
+  """All values that are not equal to given value."""
+  url_not: String
+
+  """All values that are contained in given list."""
+  url_in: [String!]
+
+  """All values that are not contained in given list."""
+  url_not_in: [String!]
+
+  """All values less than the given value."""
+  url_lt: String
+
+  """All values less than or equal the given value."""
+  url_lte: String
+
+  """All values greater than the given value."""
+  url_gt: String
+
+  """All values greater than or equal the given value."""
+  url_gte: String
+
+  """All values containing the given string."""
+  url_contains: String
+
+  """All values not containing the given string."""
+  url_not_contains: String
+
+  """All values starting with the given string."""
+  url_starts_with: String
+
+  """All values not starting with the given string."""
+  url_not_starts_with: String
+
+  """All values ending with the given string."""
+  url_ends_with: String
+
+  """All values not ending with the given string."""
+  url_not_ends_with: String
+  addedBy: UserWhereInput
+}
+
 type Subscription {
   post(where: PostSubscriptionWhereInput): PostSubscriptionPayload
+  playlist(where: PlaylistSubscriptionWhereInput): PlaylistSubscriptionPayload
+  song(where: SongSubscriptionWhereInput): SongSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -434,6 +796,11 @@ input UserCreateInput {
   password: String!
   name: String!
   posts: PostCreateManyWithoutAuthorInput
+}
+
+input UserCreateOneInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 input UserCreateOneWithoutPostsInput {
@@ -517,11 +884,25 @@ input UserSubscriptionWhereInput {
   node: UserWhereInput
 }
 
+input UserUpdateDataInput {
+  email: String
+  password: String
+  name: String
+  posts: PostUpdateManyWithoutAuthorInput
+}
+
 input UserUpdateInput {
   email: String
   password: String
   name: String
   posts: PostUpdateManyWithoutAuthorInput
+}
+
+input UserUpdateOneRequiredInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
 }
 
 input UserUpdateOneRequiredWithoutPostsInput {
@@ -535,6 +916,11 @@ input UserUpdateWithoutPostsDataInput {
   email: String
   password: String
   name: String
+}
+
+input UserUpsertNestedInput {
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserUpsertWithoutPostsInput {
