@@ -8,8 +8,6 @@ import { AUTH_TOKEN } from './constant'
 import RootContainer from './components/RootContainer'
 import { ApolloProvider } from 'react-apollo'
 
-import 'tachyons'
-import './index.css'
 
 const httpLink = new HttpLink({ uri: 'http://localhost:4000' })
 

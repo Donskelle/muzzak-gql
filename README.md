@@ -21,9 +21,9 @@ npm i -g prisma
 ```
 
 #### Backend links
-[playground](https://eu1.prisma.sh/fabian-f24b98/muzzakshare/dev)
+[Prisma Playground](https://eu1.prisma.sh/public-laceslayer-665/muzzak/dev)
 
-[ws](https://eu1.prisma.sh/fabian-f24b98/muzzakshare/dev)
+[WS Develop](wss://eu1.prisma.sh/public-laceslayer-665/muzzak/dev)
 
 #### Prisma doc links
 [cli](https://www.prisma.io/docs/prisma-cli-and-configuration/cli-command-reference-xcv9/)

@@ -16,6 +16,8 @@ import SignupPage from './SignupPage'
 import PageNotFound from './PageNotFound'
 import LogoutPage from './LogoutPage'
 import SocialPlayer from './SocialPlayer'
+import SongList from './SongList'
+import PlaylistList from './PlaylistList'
 import { AUTH_TOKEN } from '../constant'
 import { isTokenExpired } from '../helper/jwtHelper'
 import { graphql } from 'react-apollo'
@@ -106,6 +108,15 @@ class RootContainer extends Component {
         >
           Feed
         </NavLink>
+        <NavLink
+          className="link dim f6 f5-ns dib mr3 black"
+          activeClassName="gray"
+          exact={true}
+          to="/playlists"
+          title="Playlists"
+        >
+          Playlist
+        </NavLink>
         {this.props.data &&
           this.props.data.me &&
           this.props.data.me.email &&
@@ -119,6 +130,20 @@ class RootContainer extends Component {
             >
               Drafts
             </NavLink>
+          )}
+        {this.props.data &&
+          this.props.data.me &&
+          this.props.data.me.email &&
+          this.state.token && (
+            <NavLink
+              className="link dim f6 f5-ns dib mr3 black"
+              activeClassName="gray"
+              exact={true}
+              to="/songs"
+              title="Songs"
+            >
+              Songs
+              </NavLink>
           )}
         {this.state.token ? (
           <div
@@ -182,6 +207,20 @@ class RootContainer extends Component {
             path="/signup"
             render={props => (
               <SignupPage refreshTokenFn={this.refreshTokenFn} />
+            )}
+          />
+          <Route
+            token={this.state.token}
+            path="/songs"
+            render={props => (
+              <SongList refreshTokenFn={this.refreshTokenFn} />
+            )}
+          />
+          <Route
+            token={this.state.token}
+            path="/playlists"
+            render={props => (
+              <PlaylistList refreshTokenFn={this.refreshTokenFn} />
             )}
           />
           <Route path="/logout" component={LogoutPage} />
