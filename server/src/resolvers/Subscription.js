@@ -25,6 +25,9 @@ const Subscription = {
       )
     },
   },
+  playlistSubscription: {
+    subscribe: (parent, args, ctx, info) => ctx.db.subscription.playlist(args, info)
+  }
 }
 
 module.exports = { Subscription }
