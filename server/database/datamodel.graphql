@@ -17,6 +17,7 @@ type User {
 }
 
 type Playlist {
+  id: ID! @unique
   author: User!
   title: String!
   songs: [Song!]!
@@ -25,6 +26,7 @@ type Playlist {
 }
 
 type Song {
+  id: ID! @unique
   url: String!
   addedBy: User!
 }

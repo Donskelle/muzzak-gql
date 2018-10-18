@@ -1,5 +1,5 @@
 # source: https://eu1.prisma.sh/public-laceslayer-665/muzzak/dev
-# timestamp: Thu Oct 18 2018 10:43:49 GMT+0200 (Mitteleuropäische Sommerzeit)
+# timestamp: Thu Oct 18 2018 23:08:19 GMT+0200 (Mitteleuropäische Sommerzeit)
 
 type AggregatePlaylist {
   count: Int!
@@ -36,10 +36,16 @@ type Mutation {
   createSong(data: SongCreateInput!): Song!
   createUser(data: UserCreateInput!): User!
   updatePost(data: PostUpdateInput!, where: PostWhereUniqueInput!): Post
+  updatePlaylist(data: PlaylistUpdateInput!, where: PlaylistWhereUniqueInput!): Playlist
+  updateSong(data: SongUpdateInput!, where: SongWhereUniqueInput!): Song
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   deletePost(where: PostWhereUniqueInput!): Post
+  deletePlaylist(where: PlaylistWhereUniqueInput!): Playlist
+  deleteSong(where: SongWhereUniqueInput!): Song
   deleteUser(where: UserWhereUniqueInput!): User
   upsertPost(where: PostWhereUniqueInput!, create: PostCreateInput!, update: PostUpdateInput!): Post!
+  upsertPlaylist(where: PlaylistWhereUniqueInput!, create: PlaylistCreateInput!, update: PlaylistUpdateInput!): Playlist!
+  upsertSong(where: SongWhereUniqueInput!, create: SongCreateInput!, update: SongUpdateInput!): Song!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyPosts(data: PostUpdateInput!, where: PostWhereInput): BatchPayload!
   updateManyPlaylists(data: PlaylistUpdateInput!, where: PlaylistWhereInput): BatchPayload!
@@ -78,7 +84,8 @@ type PageInfo {
   endCursor: String
 }
 
-type Playlist {
+type Playlist implements Node {
+  id: ID!
   author: User!
   title: String!
   songs(where: SongWhereInput, orderBy: SongOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Song!]
@@ -112,17 +119,18 @@ type PlaylistEdge {
 }
 
 enum PlaylistOrderByInput {
+  id_ASC
+  id_DESC
   title_ASC
   title_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
-  id_ASC
-  id_DESC
 }
 
 type PlaylistPreviousValues {
+  id: ID!
   title: String!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -182,6 +190,46 @@ input PlaylistWhereInput {
 
   """Logical NOT on all given filters combined by AND."""
   NOT: [PlaylistWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
   title: String
 
   """All values that are not equal to given value."""
@@ -270,6 +318,10 @@ input PlaylistWhereInput {
   songs_every: SongWhereInput
   songs_some: SongWhereInput
   songs_none: SongWhereInput
+}
+
+input PlaylistWhereUniqueInput {
+  id: ID
 }
 
 type Post implements Node {
@@ -605,6 +657,8 @@ type Query {
   songs(where: SongWhereInput, orderBy: SongOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Song]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   post(where: PostWhereUniqueInput!): Post
+  playlist(where: PlaylistWhereUniqueInput!): Playlist
+  song(where: SongWhereUniqueInput!): Song
   user(where: UserWhereUniqueInput!): User
   postsConnection(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PostConnection!
   playlistsConnection(where: PlaylistWhereInput, orderBy: PlaylistOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PlaylistConnection!
@@ -618,7 +672,8 @@ type Query {
   ): Node
 }
 
-type Song {
+type Song implements Node {
+  id: ID!
   url: String!
   addedBy: User!
 }
@@ -640,6 +695,7 @@ input SongCreateInput {
 
 input SongCreateManyInput {
   create: [SongCreateInput!]
+  connect: [SongWhereUniqueInput!]
 }
 
 """An edge in a connection."""
@@ -652,10 +708,10 @@ type SongEdge {
 }
 
 enum SongOrderByInput {
-  url_ASC
-  url_DESC
   id_ASC
   id_DESC
+  url_ASC
+  url_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -663,6 +719,7 @@ enum SongOrderByInput {
 }
 
 type SongPreviousValues {
+  id: ID!
   url: String!
 }
 
@@ -705,6 +762,11 @@ input SongSubscriptionWhereInput {
   node: SongWhereInput
 }
 
+input SongUpdateDataInput {
+  url: String
+  addedBy: UserUpdateOneRequiredInput
+}
+
 input SongUpdateInput {
   url: String
   addedBy: UserUpdateOneRequiredInput
@@ -712,6 +774,22 @@ input SongUpdateInput {
 
 input SongUpdateManyInput {
   create: [SongCreateInput!]
+  connect: [SongWhereUniqueInput!]
+  disconnect: [SongWhereUniqueInput!]
+  delete: [SongWhereUniqueInput!]
+  update: [SongUpdateWithWhereUniqueNestedInput!]
+  upsert: [SongUpsertWithWhereUniqueNestedInput!]
+}
+
+input SongUpdateWithWhereUniqueNestedInput {
+  where: SongWhereUniqueInput!
+  data: SongUpdateDataInput!
+}
+
+input SongUpsertWithWhereUniqueNestedInput {
+  where: SongWhereUniqueInput!
+  update: SongUpdateDataInput!
+  create: SongCreateInput!
 }
 
 input SongWhereInput {
@@ -723,6 +801,46 @@ input SongWhereInput {
 
   """Logical NOT on all given filters combined by AND."""
   NOT: [SongWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
   url: String
 
   """All values that are not equal to given value."""
@@ -764,6 +882,10 @@ input SongWhereInput {
   """All values not ending with the given string."""
   url_not_ends_with: String
   addedBy: UserWhereInput
+}
+
+input SongWhereUniqueInput {
+  id: ID
 }
 
 type Subscription {

@@ -15,17 +15,18 @@ import LoginPage from './LoginPage'
 import SignupPage from './SignupPage'
 import PageNotFound from './PageNotFound'
 import LogoutPage from './LogoutPage'
+import SocialPlayer from './SocialPlayer'
 import { AUTH_TOKEN } from '../constant'
 import { isTokenExpired } from '../helper/jwtHelper'
 import { graphql } from 'react-apollo'
-import  { gql } from 'apollo-boost'
+import { gql } from 'apollo-boost'
 
 const ProtectedRoute = ({ component: Component, token, ...rest }) => {
   return token ? (
     <Route {...rest} render={matchProps => <Component {...matchProps} />} />
   ) : (
-    <Redirect to="/login" />
-  )
+      <Redirect to="/login" />
+    )
 }
 
 class RootContainer extends Component {
@@ -80,9 +81,14 @@ class RootContainer extends Component {
         <Fragment>
           {this.renderNavBar()}
           {this.renderRoute()}
+          {this.renderPlayer()}
         </Fragment>
       </Router>
     )
+  }
+
+  renderPlayer() {
+    return <SocialPlayer />
   }
 
   renderNavBar() {
@@ -128,13 +134,13 @@ class RootContainer extends Component {
             Logout
           </div>
         ) : (
-          <Link
-            to="/login"
-            className="f6 link dim br1 ba ph3 pv2 fr mb2 dib black"
-          >
-            Login
+            <Link
+              to="/login"
+              className="f6 link dim br1 ba ph3 pv2 fr mb2 dib black"
+            >
+              Login
           </Link>
-        )}
+          )}
         {this.props.data &&
           this.props.data.me &&
           this.props.data.me.email &&
