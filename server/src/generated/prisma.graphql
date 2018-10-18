@@ -1,5 +1,5 @@
 # source: https://eu1.prisma.sh/public-laceslayer-665/muzzak/dev
-# timestamp: Thu Oct 18 2018 23:08:19 GMT+0200 (Mitteleuropäische Sommerzeit)
+# timestamp: Thu Oct 18 2018 23:30:24 GMT+0200 (Mitteleuropäische Sommerzeit)
 
 type AggregatePlaylist {
   count: Int!
@@ -676,6 +676,7 @@ type Song implements Node {
   id: ID!
   url: String!
   addedBy: User!
+  addedAt: DateTime!
 }
 
 """A connection to a list of items."""
@@ -690,6 +691,7 @@ type SongConnection {
 
 input SongCreateInput {
   url: String!
+  addedAt: DateTime!
   addedBy: UserCreateOneInput!
 }
 
@@ -712,6 +714,8 @@ enum SongOrderByInput {
   id_DESC
   url_ASC
   url_DESC
+  addedAt_ASC
+  addedAt_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -721,6 +725,7 @@ enum SongOrderByInput {
 type SongPreviousValues {
   id: ID!
   url: String!
+  addedAt: DateTime!
 }
 
 type SongSubscriptionPayload {
@@ -764,11 +769,13 @@ input SongSubscriptionWhereInput {
 
 input SongUpdateDataInput {
   url: String
+  addedAt: DateTime
   addedBy: UserUpdateOneRequiredInput
 }
 
 input SongUpdateInput {
   url: String
+  addedAt: DateTime
   addedBy: UserUpdateOneRequiredInput
 }
 
@@ -881,6 +888,28 @@ input SongWhereInput {
 
   """All values not ending with the given string."""
   url_not_ends_with: String
+  addedAt: DateTime
+
+  """All values that are not equal to given value."""
+  addedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  addedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  addedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  addedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  addedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  addedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  addedAt_gte: DateTime
   addedBy: UserWhereInput
 }
 

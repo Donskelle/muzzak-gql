@@ -29,4 +29,5 @@ type Song {
   id: ID! @unique
   url: String!
   addedBy: User!
+  addedAt: DateTime!
 }
