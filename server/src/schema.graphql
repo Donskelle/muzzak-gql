@@ -1,13 +1,13 @@
 # import Post from "./generated/prisma.graphql"
 
 type Query {
-  feed: [Post!]!
+  feed(orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Post!]!
   drafts: [Post!]!
   post(id: ID!): Post
-  posts(filter: String, skip: Int, first: Int, orderBy: PostOrderByInput): [Post!]!
+  posts(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Post!]!
   me: User
   users(filter: String, skip: Int, first: Int, orderBy: UserOrderByInput, last: Int): [User!]!
-  playlists(filter: String, skip: Int, first: Int, orderBy: PlaylistOrderByInput): [Playlist!]!
+  playlists(where: PlaylistWhereInput, orderBy: PlaylistOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Playlist!]!
   playlist: Playlist
 }
 

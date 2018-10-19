@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react'
-import Post from '../components/Post'
+import Post from '../../components/Post'
 import { graphql } from 'react-apollo'
-import  { gql } from 'apollo-boost'
+import { gql } from 'apollo-boost'
+import Typography from '@material-ui/core/Typography'
+
 
 class FeedPage extends Component {
   componentWillReceiveProps(nextProps) {
@@ -25,7 +27,9 @@ class FeedPage extends Component {
 
     return (
       <Fragment>
-        <h1>Feed</h1>
+        <Typography variant="h4" gutterBottom component="h2">
+          Feed
+        </Typography>
         {this.props.feedQuery.feed &&
           this.props.feedQuery.feed.map(post => (
             <Post
@@ -43,11 +47,12 @@ class FeedPage extends Component {
 
 const FEED_QUERY = gql`
   query FeedQuery {
-    feed {
+    feed(orderBy:createdAt_DESC, first: 5) {
       id
       text
       title
       isPublished
+      createdAt
       author {
         name
       }

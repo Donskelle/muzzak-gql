@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { graphql } from 'react-apollo'
 import { gql } from 'apollo-boost'
-import { AUTH_TOKEN } from '../constant'
+import { AUTH_TOKEN } from '../../constant'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -38,7 +38,7 @@ class LoginPage extends Component {
             </Avatar>
             <Typography component="h1" variant="h5">
               Sign in
-          </Typography>
+            </Typography>
             <form className={classes.form}>
               <FormControl margin="normal" required fullWidth>
                 <InputLabel htmlFor="email">Email Address</InputLabel>

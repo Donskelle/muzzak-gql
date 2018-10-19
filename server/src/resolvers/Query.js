@@ -15,14 +15,14 @@ const Query = {
       }
     }
 
-    return ctx.db.query.posts({ where }, info)
+    return ctx.db.query.posts({ ...args, where }, info)
   },
 
   post(parent, { id }, ctx, info) {
     return ctx.db.query.post({ where: { id } }, info)
   },
 
-  posts({ user: { id } }, args, ctx, info) {
+  posts(parent, args, ctx, info) {
     return ctx.db.query.posts(args, info)
   },
 
@@ -44,12 +44,6 @@ const Query = {
   playlist(parent, args, ctx, info) {
     return ctx.db.query.playlist(args, info)
   },
-
-  // User: {
-  //   posts(parent, args, ctx, info) {
-  //     return ctx.db.query.posts({ where: { author: { id: parent.id } } })
-  //   }
-  // },
 }
 
 module.exports = { Query }
