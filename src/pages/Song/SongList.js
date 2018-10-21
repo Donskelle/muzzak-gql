@@ -143,6 +143,7 @@ class SongList extends Component {
     let result = await this.props.createSongMutation({
       variables: { url: createSongUrl },
     })
+    console.log(process.env)
   }
 
   handleSearch = async e => {
@@ -150,8 +151,9 @@ class SongList extends Component {
     if (!searchSongInput) return null
 
     try {
+      console.log(process.env)
       const searchResponse = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=id,snippet&q=${searchSongInput}&type=video&key=AIzaSyBQoEp-UJmL5AOhAoc4juNaCNfES74XLSY`,
+        `https://www.googleapis.com/youtube/v3/search?part=id,snippet&q=${searchSongInput}&type=video&key=${process.env.REACT_APP_SECRET_CODE}`,
       )
       const data = await searchResponse.json()
       this.setState({ searchItems: data.items })
