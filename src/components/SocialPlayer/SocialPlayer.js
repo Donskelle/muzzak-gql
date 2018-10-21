@@ -12,7 +12,7 @@ class SocialPlayer extends Component {
 
   render() {
     return (
-      <ReactPlayer class="hidden" url="https://www.youtube.com/watch?v=ysz5S6PUM-U" />
+      <ReactPlayer className="hidden" url="https://www.youtube.com/watch?v=ysz5S6PUM-U" />
     )
   }
 }

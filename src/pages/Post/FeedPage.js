@@ -4,7 +4,6 @@ import { graphql } from 'react-apollo'
 import { gql } from 'apollo-boost'
 import Typography from '@material-ui/core/Typography'
 
-
 class FeedPage extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.location.key !== nextProps.location.key) {
@@ -18,17 +17,13 @@ class FeedPage extends Component {
 
   render() {
     if (this.props.feedQuery.loading) {
-      return (
-        <div className="flex w-100 h-100 items-center justify-center pt7">
-          <div>Loading (from {process.env.REACT_APP_GRAPHQL_ENDPOINT})</div>
-        </div>
-      )
+      return <div>Loading (from {process.env.REACT_APP_GRAPHQL_ENDPOINT})</div>
     }
 
     return (
       <Fragment>
         <Typography variant="h4" gutterBottom component="h2">
-          Feed
+          Blog
         </Typography>
         {this.props.feedQuery.feed &&
           this.props.feedQuery.feed.map(post => (
@@ -47,7 +42,7 @@ class FeedPage extends Component {
 
 const FEED_QUERY = gql`
   query FeedQuery {
-    feed(orderBy:createdAt_DESC, first: 5) {
+    feed(orderBy: createdAt_DESC, first: 5) {
       id
       text
       title
@@ -67,6 +62,7 @@ const FEED_SUBSCRIPTION = gql`
         text
         title
         isPublished
+        createdAt
         author {
           name
         }
@@ -94,7 +90,7 @@ export default graphql(FEED_QUERY, {
               return prev
             }
             return Object.assign({}, prev, {
-              feed: [...prev.feed, newPost],
+              feed: [newPost, ...prev.feed],
             })
           },
         })

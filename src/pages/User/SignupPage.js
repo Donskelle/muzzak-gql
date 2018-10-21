@@ -37,6 +37,7 @@ class SignupPage extends Component {
     activeStep: 0,
     maxStep: 3,
   }
+
   onChange2(statePasword) {
     this.setState({
       password: statePasword.password,
@@ -52,9 +53,11 @@ class SignupPage extends Component {
       this.setState({ emailValidation: false })
     }
   }
+
   validateEmail(email) {
     return validator.validate(email)
   }
+
   calculateBuffer() {
     let data = ''
     if (this.state.activeStep === 0) {
@@ -69,6 +72,7 @@ class SignupPage extends Component {
     let maxValue = data.length / 10 > 1 ? 1 : data.length / 10
     return (this.state.activeStep + maxValue) * 100 / this.state.maxStep
   }
+
   handleNext = () => {
     if (this.state.name) {
       if (this.state.activeStep === 0) {
@@ -191,7 +195,8 @@ class SignupPage extends Component {
 
   _signup = () => {
     const { email, name, password } = this.state
-    const result = this.props.signupMutation({
+    
+    this.props.signupMutation({
       variables: {
         name,
         email,

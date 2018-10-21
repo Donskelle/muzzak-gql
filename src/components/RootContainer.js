@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import {
   NavLink,
-  Link,
   BrowserRouter as Router,
   Route,
   Switch,
@@ -9,7 +8,6 @@ import {
 } from 'react-router-dom'
 import FeedPage from './../pages/Post/FeedPage'
 import DraftsPage from './../pages/Post/DraftsPage'
-import CreatePage from './../pages/Post/CreatePage'
 import DetailPage from './../pages/Post/DetailPage'
 import LoginPage from './../pages/User/LoginPage'
 import SignupPage from './../pages/User/SignupPage'
@@ -18,6 +16,7 @@ import LogoutPage from './../pages/User/LogoutPage'
 import SocialPlayer from './SocialPlayer/SocialPlayer'
 import SongList from './../pages/Song/SongList'
 import PlaylistList from './../pages/Playlist/PlaylistList'
+import PlaylistDetail from './../pages/Playlist/PlaylistDetail'
 import { AUTH_TOKEN } from '../constant'
 import { isTokenExpired } from '../helper/jwtHelper'
 import { graphql } from 'react-apollo'
@@ -43,17 +42,21 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import DashboardIcon from '@material-ui/icons/Dashboard'
-import PeopleIcon from '@material-ui/icons/People'
-import BarChartIcon from '@material-ui/icons/BarChart'
-import LayersIcon from '@material-ui/icons/Layers'
+import QueueMusic from '@material-ui/icons/QueueMusic'
+import PlaylistAdd from '@material-ui/icons/PlaylistAdd'
+import ExitToApp from '@material-ui/icons/ExitToApp'
+import NoteAdd from '@material-ui/icons/NoteAdd'
+import PersonAdd from '@material-ui/icons/PersonAdd'
+import LockIcon from '@material-ui/icons/LockOutlined'
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
 
 const ProtectedRoute = ({ component: Component, token, ...rest }) => {
   return token ? (
     <Route {...rest} render={matchProps => <Component {...matchProps} />} />
   ) : (
-      <Redirect to="/login" />
-    )
+    <Redirect to="/login" />
+  )
 }
 const drawerWidth = 240
 
@@ -147,11 +150,11 @@ class RootContainer extends Component {
 
   handleDrawerOpen = () => {
     this.setState({ open: true })
-  };
+  }
 
   handleDrawerClose = () => {
     this.setState({ open: false })
-  };
+  }
 
   refreshTokenFn(data = {}) {
     const token = data.AUTH_TOKEN
@@ -199,9 +202,15 @@ class RootContainer extends Component {
           <div className={classes.root}>
             <AppBar
               position="absolute"
-              className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
+              className={classNames(
+                classes.appBar,
+                this.state.open && classes.appBarShift,
+              )}
             >
-              <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
+              <Toolbar
+                disableGutters={!this.state.open}
+                className={classes.toolbar}
+              >
                 <IconButton
                   color="inherit"
                   aria-label="Open drawer"
@@ -221,18 +230,24 @@ class RootContainer extends Component {
                   className={classes.title}
                 >
                   Muzzak
-              </Typography>
+                </Typography>
                 <IconButton color="inherit">
                   <Badge badgeContent={4} color="secondary">
                     <NotificationsIcon />
                   </Badge>
+                </IconButton>
+                <IconButton color="inherit">
+                  <AccountCircle />
                 </IconButton>
               </Toolbar>
             </AppBar>
             <Drawer
               variant="permanent"
               classes={{
-                paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
+                paper: classNames(
+                  classes.drawerPaper,
+                  !this.state.open && classes.drawerPaperClose,
+                ),
               }}
               open={this.state.open}
             >
@@ -243,10 +258,11 @@ class RootContainer extends Component {
               </div>
               <Divider />
               <List>{this.renderMenuItem()}</List>
-
+              <Divider />
+              <List>{this.renderMenuSubItem()}</List>
 
               <Divider />
-              <List></List>
+              <List />
             </Drawer>
             <main className={classes.content}>
               <div className={classes.appBarSpacer} />
@@ -264,24 +280,23 @@ class RootContainer extends Component {
   }
 
   renderMenuItem() {
-
     return (
       <div>
-        <ListItem button component={Link} to="/" title="Blog">
+        <ListItem button component={NavLink} to="/" title="Feed" exact={true}>
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
           <ListItemText primary="Blog" />
         </ListItem>
-        <ListItem button component={NavLink} to="/" title="Feed" exact={true}>
+        <ListItem
+          button
+          component={NavLink}
+          to="/playlists"
+          title="Playlists"
+          exact={true}
+        >
           <ListItemIcon>
-            <BarChartIcon />
-          </ListItemIcon>
-          <ListItemText primary="Feed" />
-        </ListItem>
-        <ListItem button component={NavLink} to="/playlists" title="Playlists" exact={true}>
-          <ListItemIcon>
-            <PeopleIcon />
+            <PlaylistAdd />
           </ListItemIcon>
           <ListItemText primary="Playlist" />
         </ListItem>
@@ -289,68 +304,89 @@ class RootContainer extends Component {
           this.props.data.me &&
           this.props.data.me.email &&
           this.state.token && (
-            <ListItem button component={NavLink} to="/drafts" title="Drafts" exact={true}>
+            <ListItem
+              button
+              component={NavLink}
+              to="/songs"
+              title="Songs"
+              exact={true}
+            >
               <ListItemIcon>
-                <DashboardIcon />
+                <QueueMusic />
               </ListItemIcon>
-              <ListItemText primary="Drafts" />
+              <ListItemText primary="Songs" />
             </ListItem>
           )}
         {this.props.data &&
           this.props.data.me &&
           this.props.data.me.email &&
           this.state.token && (
-            <ListItem button component={NavLink} to="/songs" title="Songs" exact={true}>
+            <ListItem
+              button
+              component={NavLink}
+              to="/drafts"
+              title="Drafts"
+              exact={true}
+            >
               <ListItemIcon>
-                <LayersIcon />
+                <NoteAdd />
               </ListItemIcon>
-              <ListItemText primary="Songs" />
+              <ListItemText primary="Blog Drafts" />
             </ListItem>
           )}
+      </div>
+    )
+  }
+
+  renderMenuSubItem() {
+    return (
+      <div>
         {this.state.token ? (
-          <ListItem button onClick={() => {
-            this.refreshTokenFn &&
-              this.refreshTokenFn({
-                [AUTH_TOKEN]: null,
-              })
-            window.location.href = '/'
-          }} title="Logout">
+          <ListItem
+            button
+            onClick={() => {
+              this.refreshTokenFn &&
+                this.refreshTokenFn({
+                  [AUTH_TOKEN]: null,
+                })
+              window.location.href = '/'
+            }}
+            title="Logout"
+          >
             <ListItemIcon>
-              <LayersIcon />
+              <ExitToApp />
             </ListItemIcon>
             <ListItemText primary="Logout" />
           </ListItem>
         ) : (
-            <ListItem button component={NavLink} to="/login" title="Login" exact={true}>
-              <ListItemIcon>
-                <LayersIcon />
-              </ListItemIcon>
-              <ListItemText primary="Login" />
-            </ListItem>
-          )
-        }
-        {!this.state.token && (
-          <ListItem button component={NavLink} to="/signup" title="Signup" exact={true}>
-              <ListItemIcon>
-                <LayersIcon />
-              </ListItemIcon>
-              <ListItemText primary="Signup" />
-            </ListItem>
+          <ListItem
+            button
+            component={NavLink}
+            to="/login"
+            title="Login"
+            exact={true}
+          >
+            <ListItemIcon>
+              <LockIcon />
+            </ListItemIcon>
+            <ListItemText primary="Login" />
+          </ListItem>
         )}
-        {
-          this.props.data &&
-          this.props.data.me &&
-          this.props.data.me.email &&
-          this.state.token && (
-            <ListItem button component={NavLink} to="/create" title="Create Draft" exact={true}>
-              <ListItemIcon>
-                <LayersIcon />
-              </ListItemIcon>
-              <ListItemText primary="+ Create Draft" />
-            </ListItem>
-          )
-        }
-      </div >
+        {!this.state.token && (
+          <ListItem
+            button
+            component={NavLink}
+            to="/signup"
+            title="Signup"
+            exact={true}
+          >
+            <ListItemIcon>
+              <PersonAdd />
+            </ListItemIcon>
+            <ListItemText primary="Signup" />
+          </ListItem>
+        )}
+      </div>
     )
   }
 
@@ -363,11 +399,6 @@ class RootContainer extends Component {
             token={this.state.token}
             path="/drafts"
             component={DraftsPage}
-          />
-          <ProtectedRoute
-            token={this.state.token}
-            path="/create"
-            component={CreatePage}
           />
           <Route path="/post/:id" component={DetailPage} />
           <Route
@@ -385,15 +416,24 @@ class RootContainer extends Component {
           <Route
             token={this.state.token}
             path="/songs"
-            render={props => (
-              <SongList refreshTokenFn={this.refreshTokenFn} />
-            )}
+            render={props => <SongList refreshTokenFn={this.refreshTokenFn} />}
           />
           <Route
             token={this.state.token}
             path="/playlists"
             render={props => (
               <PlaylistList refreshTokenFn={this.refreshTokenFn} />
+            )}
+          />
+          <Route
+            token={this.state.token}
+            path="/playlist/:id"
+            render={props => (
+              <PlaylistDetail
+                user={this.props.data.me}
+                {...props}
+                refreshTokenFn={this.refreshTokenFn}
+              />
             )}
           />
           <Route path="/logout" component={LogoutPage} />
@@ -416,8 +456,7 @@ const ME_QUERY = gql`
 
 RootContainer.propTypes = {
   classes: PropTypes.object.isRequired,
-};
-
+}
 
 export default graphql(ME_QUERY, {
   options: {

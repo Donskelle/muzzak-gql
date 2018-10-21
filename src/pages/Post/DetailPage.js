@@ -1,14 +1,16 @@
 import React, { Component, Fragment } from 'react'
 import { graphql, compose } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
-import  { gql } from 'apollo-boost'
+import { gql } from 'apollo-boost'
+import Typography from '@material-ui/core/Typography'
+
 
 class DetailPage extends Component {
   render() {
     if (this.props.postQuery.loading) {
       return (
-        <div className="flex w-100 h-100 items-center justify-center pt7">
-          <div>Loading (from {process.env.REACT_APP_GRAPHQL_ENDPOINT})</div>
+        <div>
+          <div>Loading</div>
         </div>
       )
     }
@@ -19,7 +21,9 @@ class DetailPage extends Component {
 
     return (
       <Fragment>
-        <h1 className="f3 black-80 fw4 lh-solid">{post.title}</h1>
+        <Typography variant="h4" gutterBottom component="h2">
+          {post.title}
+        </Typography>
         <p className="black-80 fw3">{post.text}</p>
         {action}
       </Fragment>

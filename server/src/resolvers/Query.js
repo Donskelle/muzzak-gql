@@ -11,8 +11,8 @@ const Query = {
     const where = {
       isPublished: false,
       author: {
-        id
-      }
+        id,
+      },
     }
 
     return ctx.db.query.posts({ ...args, where }, info)
@@ -31,18 +31,20 @@ const Query = {
     return ctx.db.query.user({ where: { id } }, info)
   },
 
+  songs(parent, args, ctx, info) {
+    return ctx.db.query.songs(args, info)
+  },
+
   users(parent, args, ctx, info) {
-    return ctx.db.query.users({
-      args
-    }, info)
+    return ctx.db.query.users({ args }, info)
   },
 
   playlists(parent, args, ctx, info) {
     return ctx.db.query.playlists(args, info)
   },
 
-  playlist(parent, args, ctx, info) {
-    return ctx.db.query.playlist(args, info)
+  playlist(parent, { id }, ctx, info) {
+    return ctx.db.query.playlist({ where: { id } }, info)
   },
 }
 

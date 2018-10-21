@@ -6,9 +6,10 @@ type Query {
   post(id: ID!): Post
   posts(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Post!]!
   me: User
+  songs(where: SongWhereInput, orderBy: SongOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Song!]!
   users(filter: String, skip: Int, first: Int, orderBy: UserOrderByInput, last: Int): [User!]!
   playlists(where: PlaylistWhereInput, orderBy: PlaylistOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Playlist!]!
-  playlist: Playlist
+  playlist(id: ID!): Playlist
 }
 
 type Mutation {
@@ -18,12 +19,14 @@ type Mutation {
   publish(id: ID!): Post!
   deletePost(id: ID!): Post!
 
-  createPlaylist(data: PlaylistCreateInput!): Playlist!
-  createSong(data: SongCreateInput!): Song!
+  createPlaylist(title: String!): Playlist
+  createSong(url: String!): Song
   updatePlaylist(data: PlaylistUpdateInput!, where: PlaylistWhereUniqueInput!): Playlist
   updateSong(data: SongUpdateInput!, where: SongWhereUniqueInput!): Song
-  deletePlaylist(where: PlaylistWhereUniqueInput!): Playlist
+  deletePlaylist(id: ID!): Playlist
   deleteSong(where: SongWhereUniqueInput!): Song
+
+  addSongToPlaylist(id: ID!, songId: ID!):Playlist
 }
 
 type Subscription {
