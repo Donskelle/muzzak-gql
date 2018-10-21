@@ -21,10 +21,10 @@ const styles = theme => ({
   },
   flexContainer: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr',
+    gridTemplateColumns: '1fr 1fr',
     gridGap: '30px',
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '1fr 1fr',
+      gridTemplateColumns: '1fr',
     },
     [theme.breakpoints.up('lg')]: {
       gridTemplateColumns: '1fr 1fr 1fr 1fr',
@@ -36,6 +36,7 @@ class SongList extends Component {
   state = {
     createSongUrl: '',
     searchSongInput: '',
+    nextPageToken: '',
   }
 
   constructor() {
@@ -48,6 +49,7 @@ class SongList extends Component {
       return <div>Loading</div>
     }
 
+    const { user } = this.props
     const { songs } = this.props.songsQuery
 
     return (
@@ -70,28 +72,39 @@ class SongList extends Component {
           Last added songs
         </Typography>
         {songs.length && songs.map(song => <div key={song.id}>{song.url}</div>)}
-        <Typography variant="h4" gutterBottom component="h2">
-          Add Song by Url
-        </Typography>
-        <form onSubmit={this.handleCreateSong}>
-          <TextField
-            autoFocus
-            onChange={e => this.setState({ createSongUrl: e.target.value })}
-            placeholder="Youtube Url"
-            type="text"
-            value={this.state.createSongUrl}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={!this.state.createSongUrl}
-            type="submit"
-            value="Create"
-          >
-            Add Song
-          </Button>
-        </form>
+        {user &&
+          user.id && (
+            <div>
+              <Typography variant="h4" gutterBottom component="h2">
+                Add Song by Url
+              </Typography>
+              {this.renderCreateSongByUrl()}
+            </div>
+          )}
       </div>
+    )
+  }
+
+  renderCreateSongByUrl() {
+    return (
+      <form onSubmit={this.handleCreateSong}>
+        <TextField
+          autoFocus
+          onChange={e => this.setState({ createSongUrl: e.target.value })}
+          placeholder="Youtube Url"
+          type="text"
+          value={this.state.createSongUrl}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={!this.state.createSongUrl}
+          type="submit"
+          value="Create"
+        >
+          Add Song
+        </Button>
+      </form>
     )
   }
 
@@ -133,8 +146,27 @@ class SongList extends Component {
             </CardActions>
           </Card>
         ))}
+
+        {this.state.nextPageToken && (
+          <Button onClick={this.loadMore}>Load more</Button>
+        )}
       </div>
     )
+  }
+
+  loadMore = async e => {
+    const { searchSongInput, nextPageToken } = this.state
+    if (!searchSongInput || !nextPageToken) return null
+
+    try {
+      const searchResponse = await fetch(
+        `https://www.googleapis.com/youtube/v3/search?part=id,snippet&q=${searchSongInput}&type=video&pageToken=${nextPageToken}&maxResults=25&key=${
+          process.env.REACT_APP_SECRET_CODE
+        }`,
+      )
+      const data = await searchResponse.json()
+      this.setState({ searchItems: [...this.state.searchItems, ...data.items] })
+    } catch (error) {}
   }
 
   handleCreateSong = async e => {
@@ -151,12 +183,20 @@ class SongList extends Component {
     if (!searchSongInput) return null
 
     try {
-      console.log(process.env)
       const searchResponse = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=id,snippet&q=${searchSongInput}&type=video&key=${process.env.REACT_APP_SECRET_CODE}`,
+        `https://www.googleapis.com/youtube/v3/search?part=id,snippet&q=${searchSongInput}&type=video&maxResults=25&key=${
+          process.env.REACT_APP_SECRET_CODE
+        }`,
       )
       const data = await searchResponse.json()
-      this.setState({ searchItems: data.items })
+      if (data.nextPageToken) {
+        this.setState({
+          searchItems: data.items,
+          nextPageToken: data.nextPageToken,
+        })
+      } else {
+        this.setState({ searchItems: data.items })
+      }
     } catch (error) {}
   }
 }

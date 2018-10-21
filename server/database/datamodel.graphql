@@ -31,7 +31,7 @@ type Song {
   author: User!
   createdAt: DateTime!
   publishedAt: DateTime!
-  thumbnail: String!
+  thumbnail: String
   description: String!
   channelId: String!
   channelTitle: String!

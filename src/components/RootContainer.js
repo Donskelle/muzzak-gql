@@ -48,8 +48,7 @@ import ExitToApp from '@material-ui/icons/ExitToApp'
 import NoteAdd from '@material-ui/icons/NoteAdd'
 import PersonAdd from '@material-ui/icons/PersonAdd'
 import LockIcon from '@material-ui/icons/LockOutlined'
-import AccountCircle from '@material-ui/icons/AccountCircle';
-
+import AccountCircle from '@material-ui/icons/AccountCircle'
 
 const ProtectedRoute = ({ component: Component, token, ...rest }) => {
   return token ? (
@@ -416,13 +415,21 @@ class RootContainer extends Component {
           <Route
             token={this.state.token}
             path="/songs"
-            render={props => <SongList refreshTokenFn={this.refreshTokenFn} />}
+            render={props => (
+              <SongList
+                user={this.props.data.me}
+                refreshTokenFn={this.refreshTokenFn}
+              />
+            )}
           />
           <Route
             token={this.state.token}
             path="/playlists"
             render={props => (
-              <PlaylistList refreshTokenFn={this.refreshTokenFn} />
+              <PlaylistList
+                user={this.props.data.me}
+                refreshTokenFn={this.refreshTokenFn}
+              />
             )}
           />
           <Route
