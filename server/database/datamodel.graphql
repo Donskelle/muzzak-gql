@@ -33,9 +33,7 @@ type Song {
   publishedAt: DateTime!
   thumbnail: String
   description: String!
-  channelId: String!
-  channelTitle: String!
   title: String!
   youtubeId: String!
-  duration: Int!
+  duration: Int
 }

@@ -120,7 +120,7 @@ const CREATE_PLAYLIST_MUTATION = gql`
 `
 const PLAYLIST_QUERY = gql`
   query PlaylistQuery {
-    playlists(orderBy: createdAt_DESC, first: 5) {
+    playlists(orderBy: createdAt_DESC, first: 25) {
       id
       createdAt
       title
